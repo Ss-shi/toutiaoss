@@ -4,7 +4,7 @@
       <div class="login-logo">
         <img src="../../assets/img/logo_index.png" alt />
       </div>
-      <el-form :model="LoginForm" :rules="LoginRules" ref='myForm'>
+      <el-form :model="LoginForm" :rules="LoginRules" ref="myForm">
         <el-form-item prop="mobile">
           <el-input v-model="LoginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -16,7 +16,7 @@
           <el-checkbox v-model="LoginForm.check">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button style="width:100%" @click='loginSubmit' type="primary">登录</el-button>
+          <el-button style="width:100%" @click="loginSubmit" type="primary">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {
@@ -34,27 +33,54 @@ export default {
         check: false
       },
       LoginRules: {
-        mobile: [{ required: true, message: '请输入内容' }, {
-          pattern: /^1[3456789]\d{9}$/, message: '请输入正确格式'
-        }],
-        code: [{ required: true, message: '请输入内容' }, {
-          pattern: /^\d{6}$/, message: '请输入正确格式'
-        }],
-        check: [{ validator: function (rule, value, callback) {
-          if (value) {
-            callback()
-          } else {
-            callback(new Error('要勾选哦'))
+        mobile: [
+          { required: true, message: '请输入内容' },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: '请输入正确格式'
           }
-        } }]
+        ],
+        code: [
+          { required: true, message: '请输入内容' },
+          {
+            pattern: /^\d{6}$/,
+            message: '请输入正确格式'
+          }
+        ],
+        check: [
+          {
+            validator: function (rule, value, callback) {
+              if (value) {
+                callback()
+              } else {
+                callback(new Error('要勾选哦'))
+              }
+            }
+          }
+        ]
       }
     }
   },
   methods: {
     loginSubmit () {
-      this.$refs.myForm.validate(function (isOK) {
+      this.$refs.myForm.validate(isOK => {
         if (isOK) {
-          console.log('前端校验完成')
+          // this.$axios({ url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations', method: 'post', data: this.LoginForm })
+          this.$axios
+            .post(
+              '/authorizations',
+              this.LoginForm
+            )
+            .then(result => {
+              window.localStorage.setItem('user-token', result.data.data.token)
+              this.$router.push('/home')
+            })
+            .catch(() =>
+              this.$message({
+                message: '您的手机号或验证码输入错误',
+                type: 'warning'
+              })
+            )
         }
       })
     }
