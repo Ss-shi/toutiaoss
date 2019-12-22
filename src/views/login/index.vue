@@ -72,15 +72,15 @@ export default {
               this.LoginForm
             )
             .then(result => {
-              window.localStorage.setItem('user-token', result.data.data.token)
+              window.localStorage.setItem('user-token', result.data.token)
               this.$router.push('/home')
             })
-            .catch(() =>
-              this.$message({
-                message: '您的手机号或验证码输入错误',
-                type: 'warning'
-              })
-            )
+            // .catch(() =>
+            //   this.$message({
+            //     message: '您的手机号或验证码输入错误',
+            //     type: 'warning'
+            //   })
+            // )
         }
       })
     }

@@ -10,8 +10,8 @@ export default {
 
 <style lang='less' scoped>
     .home {
-        background-image: url('../../assets/img/snow.jpg');
+        background-image: url('../../assets/img/meitu.jpg');
         height: 89vh;
-        background-size: cover;
+        background-size: 500px;
     }
 </style>
