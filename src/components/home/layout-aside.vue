@@ -34,6 +34,7 @@ export default {
     .layout{
         width:230px;
         overflow: hidden;
+        position: fixed;
         .title{
             text-align: center;
             background-color:#2e2f32;
