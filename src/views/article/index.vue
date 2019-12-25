@@ -44,7 +44,7 @@
         </el-row>
       </el-col>
       <el-col class="ico" :span="4">
-        <i class="el-icon-edit">修改</i>
+        <i class="el-icon-edit" @click='toModify(item.id)'>修改</i>
         <i class="el-icon-delete" @click='delMaterial(item.id)'>删除</i>
       </el-col>
     </el-row>
@@ -103,7 +103,11 @@ export default {
       }
     }
   },
+
   methods: {
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     delMaterial (id) {
       this.$confirm('确实要删除这篇文章吗').then(() => {
         this.$axios({
