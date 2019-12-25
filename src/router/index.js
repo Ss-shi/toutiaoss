@@ -30,6 +30,9 @@ const routes = [
       }, {
         path: 'articles',
         component: () => import('../views/article')
+      }, {
+        path: 'publish',
+        component: () => import('../views/publish')
       }]
   }
   // {
