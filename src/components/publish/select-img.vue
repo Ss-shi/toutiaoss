@@ -12,7 +12,7 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="上传图片" name="upload">
-        <el-upload class='upload-img'>
+        <el-upload class='upload-img' :show-file-list='false' :http-request='uploadImg'>
           <i class='el-icon-plus'></i>
         </el-upload>
       </el-tab-pane>
@@ -34,6 +34,12 @@ export default {
     }
   },
   methods: {
+    uploadImg (params) {
+      let form = new FormData()
+      form.append('image', params.file)
+      this.$axios({ url: '/user/images', method: 'post', data: form }).then(result =>
+        this.$emit('clickImg', result.data.url))
+    },
     clickImg (url) {
       this.$emit('clickImg', url)
     },

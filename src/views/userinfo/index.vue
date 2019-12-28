@@ -3,7 +3,7 @@
     <bread-crumb slot="header">
       <template slot="title">账户信息</template>
     </bread-crumb>
-    <el-upload class='user-image' action='' show-file-list='false'>
+    <el-upload class='user-image' action='' :http-request="uploadImg" :show-file-list="false">
       <img :src='formData.photo ? formData.photo : defaultImg' alt="">
     </el-upload>
     <el-form ref='myForm' :model="formData" :rules="rules" label-width="100px">
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -47,6 +48,18 @@ export default {
     }
   },
   methods: {
+    uploadImg (params) {
+      let form = new FormData()
+      form.append('photo', params.file)
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data: form
+      }).then(result => {
+        this.formData.photo = result.data.photo
+        eventBus.$emit('uploadInfo')
+      })
+    },
     getUserInfo () {
       this.$axios({
         url: '/user/profile'
@@ -66,6 +79,7 @@ export default {
               type: 'success',
               message: '信息修改成功'
             })
+            eventBus.$emit('uploadInfo')
           })
         }
       })
@@ -83,11 +97,15 @@ export default {
   .user-image{
     position: absolute;
     right:240px;
+    // border-radius: 50%;
+    border:1px solid #ccc;
     // top:100px;
     img{
       width: 240px;
       height: 240px;
       border-radius: 50%;
+
+      // border-radius: 50%;
       // border:1px dashed #999;
 
     }

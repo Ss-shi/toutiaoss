@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -32,21 +33,29 @@ export default {
     }
   },
   created () {
-    let token = window.localStorage.getItem('user-token')
-    this.$axios({
-      url: '/user/profile',
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(result => {
-      this.userInfo = result.data
+    this.getUser()
+    eventBus.$on('uploadInfo', () => {
+      this.getUser()
     })
   },
   methods: {
+    getUser () {
+      let token = window.localStorage.getItem('user-token')
+      this.$axios({
+        url: '/user/profile',
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(result => {
+        this.userInfo = result.data
+      })
+    },
     handle (command) {
       if (command === 'lgout') {
         window.localStorage.removeItem('user-token')
         this.$router.push('/login')
       } else if (command === 'git') {
         window.location.href = 'https://github.com/Ss-shi/toutiaoss'
+      } else if (command === 'info') {
+        this.$router.push('/home/userinfo')
       }
     }
   }
