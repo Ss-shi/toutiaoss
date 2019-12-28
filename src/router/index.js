@@ -36,7 +36,10 @@ const routes = [
       }, {
         path: 'publish/:articleId',
         component: () => import('../views/publish')
-      }]
+      }, {
+        path: 'userinfo',
+        component: () => import('../views/userinfo')
+      } ]
   }
   // {
   //   path: '/about',

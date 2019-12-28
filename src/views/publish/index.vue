@@ -8,16 +8,18 @@
             <el-input v-model='formData.title' style='width:60%;'></el-input>
         </el-form-item>
         <el-form-item label='内容' prop='content'>
-            <el-input v-model='formData.content' type="textarea"></el-input>
+            <quill-editor v-model='formData.content' style='height:300px'></quill-editor>
+            <!-- <el-input v-model='formData.content' type="textarea"></el-input> -->
         </el-form-item>
-        <el-form-item label='封面' prop='type'>
-          <el-radio-group v-model="formData.cover.type">
+        <el-form-item label='封面' prop='type' style="margin-top:100px">
+          <el-radio-group v-model="formData.cover.type" @change="changeType">
             <el-radio :label="1">单图</el-radio>
             <el-radio :label="3">三图</el-radio>
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
         </el-form-item>
+        <cover-image :list='formData.cover.images' @selectImg='clickOneImg'></cover-image>
         <el-form-item label='频道' prop='channel_id'>
             <el-select  v-model='formData.channel_id'>
                 <el-option v-for="item in channels" :key='item.id' :label="item.name" :value="item.id"></el-option>
@@ -56,7 +58,7 @@ export default {
   watch: {
     '$route' (to, from) {
       if (Object.keys(to.params).length) {
-
+        this.getArticleById(to.params.articleId)
       } else {
         // 无参数，清空列表
         this.formData = {
@@ -69,8 +71,29 @@ export default {
         }
       }
     }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     this.formData.cover.images = []
+    //   } else if (this.formData.cover.type === 1) {
+    //     this.formData.cover.images = ['']
+    //   } else if (this.formData.cover.type === 3) {
+    //     this.formData.cover.images = ['', '', '']
+    //   }
+    // }
   },
   methods: {
+    clickOneImg (img, index) {
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? img : item)
+    },
+    changeType () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      }
+    },
     getChannels () {
       this.$axios({
         url: '/channels'
