@@ -1,7 +1,7 @@
 <template>
   <el-row class="header" type="flex" align="middle" justify="space-between">
     <el-col :span="10" class="left">
-      <i class="el-icon-s-fold"></i>
+      <i @click='collapseOropen' :class="collapses ?'el-icon-s-unfold':'el-icon-s-fold'"></i>
       <span>江苏传智播客教育科技股份有限公司</span>
     </el-col>
     <el-col :span="6" class="right">
@@ -28,6 +28,7 @@ import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
+      collapses: false,
       userInfo: {},
       defaultImg: require('../../assets/img/tt.jpg')
     }
@@ -39,6 +40,10 @@ export default {
     })
   },
   methods: {
+    collapseOropen () {
+      this.collapses = !this.collapses
+      eventBus.$emit('collapses')
+    },
     getUser () {
       let token = window.localStorage.getItem('user-token')
       this.$axios({
@@ -66,9 +71,10 @@ export default {
 .header {
   line-height: 60px;
   .left {
-    font-size: 20px;
+    font-size: 22px;
     span {
       font-size: 16px;
+      padding-left:10px;
     }
   }
   .right {

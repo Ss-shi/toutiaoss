@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { uploadImg, getUserInfo } from '../../actions/userinfo'
 import eventBus from '../../utils/eventBus'
 export default {
   data () {
@@ -48,42 +49,29 @@ export default {
     }
   },
   methods: {
-    uploadImg (params) {
-      let form = new FormData()
-      form.append('photo', params.file)
-      this.$axios({
-        url: '/user/photo',
+    async uploadImg (params) {
+      let result = await uploadImg(params)
+      this.formData.photo = result.data.photo
+      eventBus.$emit('uploadInfo')
+    },
+    async getUserInfo () {
+      let result = await getUserInfo()
+      this.formData = result.data
+    },
+    async saveBtn () {
+      await this.$refs.myForm.validate
+      await this.$axios({
+        url: '/user/profile',
         method: 'patch',
-        data: form
-      }).then(result => {
-        this.formData.photo = result.data.photo
-        eventBus.$emit('uploadInfo')
+        data: this.formData
       })
-    },
-    getUserInfo () {
-      this.$axios({
-        url: '/user/profile'
-      }).then(result => {
-        this.formData = result.data
+      this.$message({
+        type: 'success',
+        message: '信息修改成功'
       })
-    },
-    saveBtn () {
-      this.$refs.myForm.validate(isOK => {
-        if (isOK) {
-          this.$axios({
-            url: '/user/profile',
-            method: 'patch',
-            data: this.formData
-          }).then(() => {
-            this.$message({
-              type: 'success',
-              message: '信息修改成功'
-            })
-            eventBus.$emit('uploadInfo')
-          })
-        }
-      })
+      eventBus.$emit('uploadInfo')
     }
+
   },
   created () {
     this.getUserInfo()

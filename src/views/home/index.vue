@@ -1,7 +1,7 @@
 <template>
   <el-container>
-    <el-aside style='width:229px;min-height:100vh;background-color: #323745;overflow:hidden;'>
-      <layout-aside></layout-aside>
+    <el-aside :style="{width:collapses?'60px':'230px'}" style='min-height:100vh;background-color: #323745;overflow:hidden;'>
+      <layout-aside :collapses="collapses"></layout-aside>
     </el-aside>
     <el-container>
       <el-header>
@@ -15,14 +15,21 @@
 </template>
 
 <script>
-// import layoutAside from '../../components/home/layout-aside'
-// import layoutHeader from '../../components/home/layout-header'
-
+import eventBus from '../../utils/eventBus'
 export default {
-  // components: {
-  // 'layout-aside': layoutAside,
-  // 'layout-header': layoutHeader
-  // }
+  data () {
+    return {
+      collapses: false
+    }
+  },
+  methods: {
+
+  },
+  created () {
+    eventBus.$on('collapses', () => {
+      this.collapses = !this.collapses
+    })
+  }
 }
 </script>
 
